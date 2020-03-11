@@ -148,7 +148,9 @@ const plugins = () => {
 		}),
 		new PhpManifestPlugin({
 			// NOTE: Will write path to your 'dist' directory
-			path: 'public/frontend/dist',
+			path: '/assets/',
+			phpClassName: 'PathsToFiles',
+			// NOTE: You have to replace your paths to files (namely this symbol "\"), from "\" to "/" (use PHP method "str_replace")
 		}),
 	];
 
