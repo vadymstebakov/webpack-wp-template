@@ -40,7 +40,7 @@ const deploy = () => {
 		port: '2304',
 		username: 'airstudi',
 		password: 'uev37U77pT',
-		cover: false,
+		cover: isDev,
 		from: path.resolve(__dirname, 'dist'),
 		to: '/home/airstudi/test5.octarine.com.ua/testWebpack',
 	});
