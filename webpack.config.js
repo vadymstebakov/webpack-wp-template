@@ -17,110 +17,110 @@ const regexImages = /\.(png|jpe?g|svg|gif)$/i;
 
 // Optimization
 const optimization = () => {
-	const config = {
-		splitChunks: {
-			chunks: 'all',
-		},
-	};
+    const config = {
+        splitChunks: {
+            chunks: 'all',
+        },
+    };
 
-	if (isProd) {
-		config.minimizer = [
-			new OptimizeCssAssetWebpackPlugin(),
-			new TerserWebpackPlugin(),
-		];
-	}
+    if (isProd) {
+        config.minimizer = [
+            new OptimizeCssAssetWebpackPlugin(),
+            new TerserWebpackPlugin(),
+        ];
+    }
 
-	return config;
+    return config;
 };
 
 // Deploy
 const deploy = () => {
-	return new SshWebpackPlugin({
-		host: 's106.aiwebhost.com',
-		port: '2304',
-		username: 'airstudi',
-		password: 'uev37U77pT',
-		cover: isDev,
-		from: path.resolve(__dirname, 'dist'),
-		to: '/home/airstudi/test5.octarine.com.ua/testWebpack',
-	});
+    return new SshWebpackPlugin({
+        host: 's106.aiwebhost.com',
+        port: '2304',
+        username: 'airstudi',
+        password: 'uev37U77pT',
+        cover: isDev,
+        from: path.resolve(__dirname, 'dist'),
+        to: '/home/airstudi/test5.octarine.com.ua/testWebpack',
+    });
 };
 
 // Style loaders
 const styleLoaders = () => {
-	const loaders = [
-		{
-			loader: MiniCssExtractPlugin.loader,
-			options: {
-				hmr: isDev,
-				reloadAll: true,
-				publicPath: '../',
-			},
-		},
-		{
-			loader: 'css-loader',
-			options: {
-				sourceMap: isDev,
-			},
-		},
-		{
-			loader: 'postcss-loader',
-			options: {
-				plugins: [autoprefixer()],
-				sourceMap: isDev,
-			},
-		},
-		{
-			loader: 'sass-loader',
-			options: {
-				sourceMap: isDev,
-			},
-		},
-	];
+    const loaders = [
+        {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+                hmr: isDev,
+                reloadAll: true,
+                publicPath: '../',
+            },
+        },
+        {
+            loader: 'css-loader',
+            options: {
+                sourceMap: isDev,
+            },
+        },
+        {
+            loader: 'postcss-loader',
+            options: {
+                plugins: [autoprefixer()],
+                sourceMap: isDev,
+            },
+        },
+        {
+            loader: 'sass-loader',
+            options: {
+                sourceMap: isDev,
+            },
+        },
+    ];
 
-	return loaders;
+    return loaders;
 };
 
 // File loaders
 const fileLoaders = () => {
-	const loaders = [
-		{
-			loader: 'file-loader',
-			options: {
-				esModule: false,
-				name: '[path][name].[ext]',
-			},
-		},
-	];
+    const loaders = [
+        {
+            loader: 'file-loader',
+            options: {
+                esModule: false,
+                name: '[path][name].[ext]',
+            },
+        },
+    ];
 
-	return loaders;
+    return loaders;
 };
 
 // Babel options
 const babelOptions = preset => {
-	const opts = {
-		presets: ['@babel/preset-env'],
-	};
+    const opts = {
+        presets: ['@babel/preset-env'],
+    };
 
-	if (preset) opts.presets.push(preset);
+    if (preset) opts.presets.push(preset);
 
-	return opts;
+    return opts;
 };
 
 // Js loaders
 const jsLoaders = () => {
-	const loaders = [
-		{
-			loader: 'babel-loader',
-			options: babelOptions(),
-		},
-	];
+    const loaders = [
+        {
+            loader: 'babel-loader',
+            options: babelOptions(),
+        },
+    ];
 
-	if (isDev) {
-		loaders.push('eslint-loader');
-	}
+    if (isDev) {
+        loaders.push('eslint-loader');
+    }
 
-	return loaders;
+    return loaders;
 };
 
 // Filename
@@ -128,78 +128,78 @@ const filename = ext => (isDev ? `[name].${ext}` : `[name].[hash].min.${ext}`);
 
 // Plugins
 const plugins = () => {
-	const base = [
-		new CleanWebpackPlugin(),
-		new CopyWebpackPlugin([
-			{
-				from: path.resolve(__dirname, 'src/images/**/**.*'),
-				to: path.resolve(__dirname, 'dist'),
-			},
-		]),
-		new MiniCssExtractPlugin({
-			filename: `styles/${filename('css')}`,
-		}),
-		new ImageminPlugin({
-			disable: isDev,
-			test: regexImages,
-			pngquant: {
-				quality: '95-100',
-			},
-		}),
-		new PhpManifestPlugin({
-			// NOTE: Will write path to your 'dist' directory
-			path: '/assets/',
-			phpClassName: 'PathsToFiles',
-			// NOTE: You have to replace your paths to files (namely this symbol "\"), from "\" to "/" (use PHP method "str_replace")
-		}),
-	];
+    const base = [
+        new CleanWebpackPlugin(),
+        new CopyWebpackPlugin([
+            {
+                from: path.resolve(__dirname, 'src/images/**/**.*'),
+                to: path.resolve(__dirname, 'dist'),
+            },
+        ]),
+        new MiniCssExtractPlugin({
+            filename: `styles/${filename('css')}`,
+        }),
+        new ImageminPlugin({
+            disable: isDev,
+            test: regexImages,
+            pngquant: {
+                quality: '95-100',
+            },
+        }),
+        new PhpManifestPlugin({
+            // NOTE: Will write path to your 'dist' directory
+            path: '/assets/',
+            phpClassName: 'PathsToFiles',
+            // NOTE: You have to replace your paths to files (namely this symbol "\"), from "\" to "/" (use PHP method "str_replace")
+        }),
+    ];
 
-	if (isProd) base.push(new BundleAnalyzerPlugin());
-	if (isDeploy) base.push(deploy());
+    if (isProd) base.push(new BundleAnalyzerPlugin());
+    if (isDeploy) base.push(deploy());
 
-	return base;
+    return base;
 };
 
 // Webpack's module
 module.exports = {
-	context: path.resolve(__dirname, 'src'),
-	mode: 'development',
-	entry: {
-		main: ['@babel/polyfill', './js/index.js'],
-	},
-	output: {
-		filename: `js/${filename('js')}`,
-		path: path.resolve(__dirname, 'dist'),
-	},
-	optimization: optimization(),
-	devtool: isDev ? 'source-map' : '',
-	plugins: plugins(),
-	resolve: {
-		alias: {
-			'@': path.resolve(__dirname, 'src'),
-		},
-	},
-	module: {
-		rules: [
-			{
-				test: /\.js$/,
-				include: /js/,
-				use: jsLoaders(),
-			},
-			{
-				test: /\.scss$/i,
-				use: styleLoaders(),
-			},
-			{
-				test: regexImages,
-				include: /images/,
-				use: fileLoaders(),
-			},
-			{
-				test: /\.(ttf|eot|woff2|woff|svg)$/i,
-				include: /fonts/,
-				use: fileLoaders(),
-			},
-		],
-	},
+    context: path.resolve(__dirname, 'src'),
+    mode: 'development',
+    entry: {
+        main: ['@babel/polyfill', './js/index.js'],
+    },
+    output: {
+        filename: `js/${filename('js')}`,
+        path: path.resolve(__dirname, 'dist'),
+    },
+    optimization: optimization(),
+    devtool: isDev ? 'source-map' : '',
+    plugins: plugins(),
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, 'src'),
+        },
+    },
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                include: /js/,
+                use: jsLoaders(),
+            },
+            {
+                test: /\.scss$/i,
+                use: styleLoaders(),
+            },
+            {
+                test: regexImages,
+                include: /images/,
+                use: fileLoaders(),
+            },
+            {
+                test: /\.(ttf|eot|woff2|woff|svg)$/i,
+                include: /fonts/,
+                use: fileLoaders(),
+            },
+        ],
+    },
 };
