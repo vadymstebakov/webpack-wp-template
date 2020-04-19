@@ -24,10 +24,7 @@ const optimization = () => {
     };
 
     if (isProd) {
-        config.minimizer = [
-            new OptimizeCssAssetWebpackPlugin(),
-            new TerserWebpackPlugin(),
-        ];
+        config.minimizer = [new OptimizeCssAssetWebpackPlugin(), new TerserWebpackPlugin()];
     }
 
     return config;
@@ -165,11 +162,7 @@ module.exports = {
     context: path.resolve(__dirname, 'src'),
     mode: 'development',
     entry: {
-        main: [
-            '@babel/polyfill',
-            'element-closest-polyfill',
-            './scripts/index.js',
-        ],
+        main: ['@babel/polyfill', 'element-closest-polyfill', './scripts/index.js'],
     },
     output: {
         filename: `scripts/${filename('js')}`,
@@ -192,6 +185,7 @@ module.exports = {
             },
             {
                 test: /\.scss$/i,
+                include: /styles/,
                 use: styleLoaders(),
             },
             {
