@@ -33,10 +33,10 @@ const optimization = () => {
 // Deploy
 const deploy = () => {
     return new SshWebpackPlugin({
-        host: 's106.aiwebhost.com',
-        port: '2304',
-        username: 'airstudi',
-        password: 'uev37U77pT',
+        host: 'hostname',
+        port: '22',
+        username: 'username',
+        password: 'pasword',
         cover: isDev,
         from: path.resolve(__dirname, 'dist'),
         to: '/home/airstudi/test5.octarine.com.ua/testWebpack',
