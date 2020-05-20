@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -33,13 +34,14 @@ const optimization = () => {
 // Deploy
 const deploy = () => {
     return new SshWebpackPlugin({
-        host: 'hostname',
+        host: 'host',
         port: '22',
         username: 'username',
-        password: 'pasword',
+        privateKey: fs.readFileSync('/home/vadym/.ssh/rd-blog'),
+        passphrase: 'passphrase',
         cover: isDev,
         from: path.resolve(__dirname, 'dist'),
-        to: '/home/airstudi/test5.octarine.com.ua/testWebpack',
+        to: '/home/vijay/apps/wordpress/htdocs/wp-content/themes/resumedone/assets',
     });
 };
 
