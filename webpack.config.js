@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const dotenv = require('dotenv').config({path: './.env.local'});
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -13,7 +14,7 @@ const SshWebpackPlugin = require('ssh-webpack-plugin');
 
 const isDev = process.env.NODE_ENV === 'development';
 const isProd = !isDev;
-const isDeploy = process.env.DEPLOY === 'deployment';
+const isDeploy = process.env.DEPLOY === 'deploy';
 const regexImages = /\.(png|jpe?g|svg|gif)$/i;
 
 // Optimization
@@ -37,11 +38,11 @@ const deploy = () => {
         host: 'host',
         port: '22',
         username: 'username',
-        privateKey: fs.readFileSync('/home/vadym/.ssh/rd-blog'),
+        privateKey: fs.readFileSync(dotenv.parsed.PATH_TO_SSH_KEY), // or password: 'password',
         passphrase: 'passphrase',
         cover: isDev,
         from: path.resolve(__dirname, 'dist'),
-        to: '/home/vijay/apps/wordpress/htdocs/wp-content/themes/resumedone/assets',
+        to: 'to',
     });
 };
 
@@ -129,12 +130,20 @@ const filename = ext => (isDev ? `[name].${ext}` : `[name].[hash].min.${ext}`);
 const plugins = () => {
     const base = [
         new CleanWebpackPlugin(),
-        new CopyWebpackPlugin([
-            {
-                from: path.resolve(__dirname, 'src/images/**/**.*'),
-                to: path.resolve(__dirname, 'dist'),
-            },
-        ]),
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: path.resolve(__dirname, 'src/images/'),
+                    to: 'images/',
+                    force: true,
+                },
+                {
+                    from: path.resolve(__dirname, 'src/fonts/'),
+                    to: 'fonts/',
+                    force: true,
+                },
+            ],
+        }),
         new MiniCssExtractPlugin({
             filename: `styles/${filename('css')}`,
         }),
