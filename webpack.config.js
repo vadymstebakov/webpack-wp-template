@@ -1,12 +1,12 @@
 const path = require('path');
 const fs = require('fs');
-const dotenv = require('dotenv').config({path: './.env.local'});
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const dotenv = require('dotenv').config({ path: './.env.local' });
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetWebpackPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
-const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const autoprefixer = require('autoprefixer');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const PhpManifestPlugin = require('webpack-php-manifest');
@@ -185,6 +185,8 @@ module.exports = {
     resolve: {
         alias: {
             '@': path.resolve(__dirname, 'src'),
+            '@scripts': path.resolve(__dirname, 'src/scripts'),
+            '@assets': path.resolve(__dirname, 'src/assets'),
         },
     },
     module: {
