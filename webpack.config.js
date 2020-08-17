@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const dotenv = require('dotenv').config({ path: './.env.local' });
+const HTMLWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -30,6 +31,18 @@ const optimization = () => {
     }
 
     return config;
+};
+
+// SVG Sprite
+const putSVGSprite = () => {
+    return new HTMLWebpackPlugin({
+        filename: 'images/symbol-sprite/symbol-sprite.html',
+        template: './images/symbol-sprite/symbol-sprite.html',
+        inject: false,
+        minify: {
+            collapseWhitespace: isProd,
+        },
+    });
 };
 
 // Deploy
@@ -144,6 +157,7 @@ const plugins = () => {
                 },
             ],
         }),
+        putSVGSprite(),
         new MiniCssExtractPlugin({
             filename: `styles/${filename('css')}`,
         }),
