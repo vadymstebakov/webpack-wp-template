@@ -1,13 +1,13 @@
 const path = require('path');
 const fs = require('fs');
 const dotenv = require('dotenv').config({ path: './.env.local' });
+const webpack = require('webpack');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetWebpackPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const PhpManifestPlugin = require('webpack-php-manifest');
 const SshWebpackPlugin = require('ssh-webpack-plugin');
@@ -144,6 +144,10 @@ const filename = ext => (isDev ? `[name].${ext}` : `[name].[hash].min.${ext}`);
 const plugins = () => {
     const base = [
         new CleanWebpackPlugin(),
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery',
+        }),
         new CopyWebpackPlugin({
             patterns: [
                 {
@@ -177,7 +181,6 @@ const plugins = () => {
         }),
     ];
 
-    if (isProd) base.push(new BundleAnalyzerPlugin());
     if (isDeploy) base.push(deploy());
 
     return base;
