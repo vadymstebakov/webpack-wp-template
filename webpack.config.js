@@ -1,7 +1,5 @@
 const path = require('path');
 const environment = require('./configuration/environment');
-const fs = require('fs');
-const dotenv = require('dotenv').config({ path: './.env.local' });
 const webpack = require('webpack');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -82,14 +80,9 @@ const putSVGSprite = () => {
 // Deploy
 const deploy = () => {
     return new SshWebpackPlugin({
-        host: 'host',
-        port: '22',
-        username: 'username',
-        privateKey: fs.readFileSync(dotenv.parsed.PATH_TO_SSH_KEY), // or password: 'password',
-        passphrase: 'passphrase',
+        ...environment.deploy,
+        from: environment.paths.output,
         cover: isDev,
-        from: path.resolve(__dirname, 'dist'),
-        to: 'to',
     });
 };
 
@@ -204,13 +197,7 @@ const plugins = () => {
             },
         }),
         new PhpManifestPlugin({
-            // NOTE: Will write path to your 'dist' directory
-            path: '/assets/',
-            phpClassName: 'PathsToFiles',
-            /* NOTE:
-                You have to replace your paths to files (namely this symbol "\"),
-                from "\" to "/" (use PHP method "str_replace")
-            */
+            ...environment.manifest,
         }),
     ];
 
@@ -224,16 +211,11 @@ const plugins = () => {
 module.exports = {
     context: environment.paths.source,
     entry: {
-        app: [
-            '@babel/polyfill',
-            'element-closest-polyfill',
-            path.resolve(environment.paths.source, 'scripts', 'index.js'),
-        ],
+        app: ['element-closest-polyfill', path.resolve(environment.paths.source, 'scripts', 'index.js')],
     },
     output: {
         filename: `scripts/${filename('js')}`,
         path: environment.paths.output,
-        publicPath: '',
     },
     optimization: optimization(),
     module: {
@@ -263,8 +245,6 @@ module.exports = {
     plugins: plugins(),
     resolve: {
         alias: {
-            // eslint-disable-next-line quote-props
-            path: require.resolve('path-browserify'),
             '@': path.resolve(__dirname, 'src'),
             '@scripts': path.resolve(__dirname, 'src/scripts'),
             '@helpers': path.resolve(__dirname, 'src/scripts/helpers'),
@@ -272,5 +252,4 @@ module.exports = {
             '@assets': path.resolve(__dirname, 'src/assets'),
         },
     },
-    target: 'web',
 };
