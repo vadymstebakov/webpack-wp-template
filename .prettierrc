@@ -5,5 +5,13 @@
     "endOfLine": "lf",
 	"trailingComma": "es5",
 	"tabWidth": 4,
-    "singleQuote": true
+    "singleQuote": true,
+    "overrides": [
+        {
+            "files": ["**/*.css", "**/*.scss", "**/*.sass", "**/*.html", "**/*.pug", "**/*.svg"],
+            "options": {
+                "singleQuote": false
+            }
+        }
+    ]
 }
