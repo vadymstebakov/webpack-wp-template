@@ -1,5 +1,5 @@
 import { EventEmitter } from '@helpers/EventEmitter';
-import { initSymbolSprite } from '@components/ui/symbolSprite';
+import { initSymbolSprite } from '@/scripts/components/ui/symbolSprite';
 import Popups from '@components/ui/Popups';
 import { resizer } from '@helpers/resizer';
 import { sleep } from '@helpers/utils';
